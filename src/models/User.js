@@ -1,7 +1,13 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../database/database.js';
+import { DataTypes } from "sequelize";
+import { sequelize } from "../database/database.js";
 
-const User = sequelize.define('User', {
+export const User = sequelize.define("User", {
+  cc: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    primaryKey: tdrue,
+  },
   firstName: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -9,11 +15,6 @@ const User = sequelize.define('User', {
   lastName: {
     type: DataTypes.STRING,
     allowNull: false,
-  },
-  cc: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
   },
   email: {
     type: DataTypes.STRING,
@@ -32,5 +33,3 @@ const User = sequelize.define('User', {
     defaultValue: 0,
   },
 });
-
-export default User;
