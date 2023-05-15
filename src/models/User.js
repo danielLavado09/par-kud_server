@@ -6,7 +6,7 @@ export const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    primaryKey: tdrue,
+    primaryKey: true,
   },
   firstName: {
     type: DataTypes.STRING,
