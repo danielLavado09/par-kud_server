@@ -1,8 +1,8 @@
 import { Sequelize } from "sequelize";
 
 export const sequelize = new Sequelize(
-  "db", // db name,
-  "user", // username
+  "par-kud", // db name,
+  "postgres", // username
   "pass", // password
   {
     host: "localhost",
