@@ -15,5 +15,6 @@ app.use(cors());
 // Routes
 app.use(authRoutes);
 app.use(parkingRoutes);
+app.use('/uploads', express.static('uploads'));
 
 export default app;

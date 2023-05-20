@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import { createParking } from "../controllers/parkingController.js";
+import { createParking, getCities, getParkingsByCity, getParkingById } from "../controllers/parkingController.js";
 
 const router = Router();
 
@@ -18,5 +18,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post("/create-parking", upload.single("image"), createParking);
+router.get("/get-cities", getCities);
+router.get("/parkings", getParkingsByCity);
+router.get("/parking/:parkingId", getParkingById);
 
 export default router;
