@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { db_name, db_user, db_psswd } from "../config";
+import { db_name, db_user, db_psswd } from "../config.js";
 
 export const sequelize = new Sequelize(
   db_name, // db name,
