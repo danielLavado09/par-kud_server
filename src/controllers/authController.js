@@ -2,22 +2,11 @@ import axios from "axios";
 import sha1 from "sha1";
 import { User } from "../models/User.js";
 import { sequelize } from "../database/database.js";
-import { captcha_key } from "../config.js";
-
-const captcha_url = 'https://www.google.com/recaptcha/api/siteverify'
 
 export async function register(req, res) {
   try{
     //Get data from request
     const {name, lastname, id, email} = req.body;
-    const captchaToken = req.headers['g-recaptcha-response'];
-    const captchaVerification = await verifyCaptcha(captchaToken);
-    //Check valid captcha
-    if (!captchaVerification){
-      res.status(500).json({
-        message: "Captcha error"
-      })
-    }
     //Generate password
     password = generatePassword()
     //Create new user
@@ -54,19 +43,6 @@ export async function login(req, res){
     res.status(404).json({
       message: "User/password not found"
     })
-  }
-}
-
-async function verifyCaptcha(token){
-  try{
-    response = axios.post(captcha_url, {
-      secret: captcha_key,
-      response: token
-    })
-    return response.data.succes;
-  } catch (error){
-    console.log(error)
-    return false;
   }
 }
 
