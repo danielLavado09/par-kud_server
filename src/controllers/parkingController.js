@@ -7,12 +7,12 @@ export const createParking = async (req, res) => {
       city,
       address,
       slots,
-      sedan_hourly_rate,
-      suv_hourly_rate,
-      motorcycle_hourly_rate,
-      opening_time,
-      closing_time,
-      is_covered,
+      sedanHourlyRate,
+      suvHourlyRate,
+      motorcycleHourlyRate,
+      openingTime,
+      closingTime,
+      isCovered,
     } = req.body;
 
     const image = req.file;
@@ -22,13 +22,13 @@ export const createParking = async (req, res) => {
       city,
       address,
       slots,
-      sedan_hourly_rate,
-      suv_hourly_rate,
-      motorcycle_hourly_rate,
-      opening_time,
-      closing_time,
-      img_url: image ? image.filename : null,
-      is_covered,
+      sedanHourlyRate,
+      suvHourlyRate,
+      motorcycleHourlyRate,
+      openingTime,
+      closingTime,
+      imgUrl: image ? image.filename : null,
+      isCovered,
     });
 
     res.status(201).json({
@@ -60,7 +60,7 @@ export const getParkingsByCity = async (req, res) => {
   try {
     const parkings = await Parking.findAll({
       where: { city },
-      attributes: ["parking_id", "name"],
+      attributes: ["parkingId", "name"],
       raw: true,
     });
     res.json(parkings);
@@ -77,6 +77,8 @@ export const getParkingById = async (req, res) => {
     res.json(parking);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error al obtener los datos del parqueadero" });
+    res
+      .status(500)
+      .json({ message: "Error al obtener los datos del parqueadero" });
   }
 };

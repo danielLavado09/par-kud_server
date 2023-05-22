@@ -3,7 +3,7 @@ import { Sequelize } from "sequelize";
 export const sequelize = new Sequelize(
   "par-kud", // db name,
   "postgres", // username
-  "pass", // password
+  "pospass", // password
   {
     host: "localhost",
     dialect: "postgres",

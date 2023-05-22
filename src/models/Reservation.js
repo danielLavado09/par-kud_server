@@ -1,35 +1,43 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../database/database";
-import { User } from "./User";
-import { Parking } from "./Parking";
+import { sequelize } from "../database/database.js";
+import { User } from "./User.js";
+import { Parking } from "./Parking.js";
 
-export const Reservation = sequelize.define("Reservation",{
-    id:{
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        primaryKey: true,
+export const Reservation = sequelize.define(
+  "Reservation",
+  {
+    reservationId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      unique: true,
+      primaryKey: true,
     },
-    status:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
+    status: {
+      type: DataTypes.ENUM("Pending", "Confirmed", "Cancelled"),
+      allowNull: false,
+      defaultValue: "Pending",
     },
-    createdAt:{
-        type: DataTypes.TIME,
-        allowNull: false,
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW, // Establece el valor por defecto a la fecha y hora actual
     },
-    startTime:{
-        type: DataTypes.TIME,
-        allowNull: false,
+    startTime: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
-    endTime:{
-        type: DataTypes.TIME,
-        allowNull: false,
-    }
-});
-//Reservation belongs to a single User and a single Parking
-Reservation.belongsTo(User)
-Reservation.belongsTo(Parking)
-//User and a Parking can have multiple Reservations
-User.hasMany(Reservation)
-Parking,hasMany(Reservation)
+    endTime: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+
+// Define las relaciones de llaves foráneas
+Reservation.belongsTo(User, { foreignKey: "identityCard" });
+Reservation.belongsTo(Parking, { foreignKey: "parkingId" });
+User.hasMany(Reservation, { foreignKey: "identityCard" });
+Parking.hasMany(Reservation, { foreignKey: "parkingId" });

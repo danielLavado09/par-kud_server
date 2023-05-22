@@ -4,7 +4,7 @@ import { sequelize } from "../database/database.js";
 export const Parking = sequelize.define(
   "Parking",
   {
-    parking_id: {
+    parkingId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -25,31 +25,31 @@ export const Parking = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    sedan_hourly_rate: {
+    sedanHourlyRate: {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    suv_hourly_rate: {
+    suvHourlyRate: {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    motorcycle_hourly_rate: {
+    motorcycleHourlyRate: {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    opening_time: {
+    openingTime: {
       type: DataTypes.TIME,
       allowNull: false,
     },
-    closing_time: {
+    closingTime: {
       type: DataTypes.TIME,
       allowNull: false,
     },
-    img_url: {
+    imgUrl: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    is_covered: {
+    isCovered: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },

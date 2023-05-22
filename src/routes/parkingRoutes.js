@@ -1,7 +1,12 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
-import { createParking, getCities, getParkingsByCity, getParkingById } from "../controllers/parkingController.js";
+import {
+  createParking,
+  getCities,
+  getParkingsByCity,
+  getParkingById,
+} from "../controllers/parkingController.js";
 
 const router = Router();
 
