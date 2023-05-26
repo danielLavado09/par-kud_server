@@ -1,16 +1,30 @@
 import { User } from "../models/User.js";
+import { Admin } from "../models/Admin.js";
+import { Employee } from "../models/Employee.js";
 import SHA1 from "crypto-js/sha1.js";
 import { generateRandomPassword } from "../util.js";
 import jwt from "jsonwebtoken";
 import { Op } from "sequelize";
 
 // Registro de usuarios
-export const register = async (req, res) => {
+export const register = async (req, res, userType) => {
   try {
+
+    //Revisa el tipo de usuario a registrar
+    let userModel = null;
+    switch(userType){
+      case "user":
+        userModel = User;
+        break;
+      case "employee":
+        userModel = Employee;
+        break;
+    }
+
     const { firstName, lastName, userName, identityCard, email } = req.body;
 
     // Verificar si el usuario ya existe
-    const existingUser = await User.findOne({
+    const existingUser = await userModel.findOne({
       where: {
         [Op.or]: [{ identityCard }, { userName }, { email }],
       },
@@ -27,7 +41,7 @@ export const register = async (req, res) => {
     const hashedPassword = SHA1(password).toString();
 
     // Crear nuevo usuario
-    const user = await User.create({
+    const user = await userModel.create({
       firstName,
       lastName,
       userName,
@@ -56,12 +70,27 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
+export const login = async (req, res, userType) => {
   try {
+
+    //Revisa el tipo de usuario que ingresa
+    let userModel = null;
+    switch(userType){
+      case "user":
+        userModel = User;
+        break;
+      case "employee":
+        userModel = Employee;
+        break;
+      case "admin":
+        userModel = Admin;
+        break;
+    }
+
     const { userName, password } = req.body;
 
     // Verificar si el usuario existe
-    const user = await User.findOne({ where: { userName } });
+    const user = await userModel.findOne({ where: { userName } });
     if (!user) {
       return res.status(401).json({ message: "No existe el usuario." });
     }
