@@ -3,8 +3,8 @@ import { sequelize } from "../database/database.js";
 import { User } from "./User.js";
 import { Parking } from "./Parking.js";
 
-export const Reservation = sequelize.define(
-  "Reservation",
+export const Reservations = sequelize.define(
+  "Reservations",
   {
     reservationId: {
       type: DataTypes.BIGINT,
@@ -37,7 +37,7 @@ export const Reservation = sequelize.define(
 );
 
 // Define las relaciones de llaves foráneas
-Reservation.belongsTo(User, { foreignKey: "identityCard" });
-Reservation.belongsTo(Parking, { foreignKey: "parkingId" });
-User.hasMany(Reservation, { foreignKey: "identityCard" });
-Parking.hasMany(Reservation, { foreignKey: "parkingId" });
+Reservations.belongsTo(User, { foreignKey: "identityCard" });
+Reservations.belongsTo(Parking, { foreignKey: "parkingId" });
+User.hasMany(Reservations, { foreignKey: "identityCard" });
+Parking.hasMany(Reservations, { foreignKey: "parkingId" });

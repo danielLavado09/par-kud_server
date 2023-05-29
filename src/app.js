@@ -9,7 +9,7 @@ dotenv.config();
 // Import routes
 import authRoutes from "./routes/authRoutes.js";
 import parkingRoutes from "./routes/parkingRoutes.js";
-import reservationRoutes from "./routes/reservationRoutes.js";
+import reservationsRoutes from "./routes/reservationsRoutes.js";
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -18,7 +18,7 @@ app.use(cors());
 // Routes
 app.use(authRoutes);
 app.use(parkingRoutes);
-app.use(reservationRoutes);
+app.use(reservationsRoutes);
 app.use("/uploads", express.static("uploads"));
 
 export default app;
