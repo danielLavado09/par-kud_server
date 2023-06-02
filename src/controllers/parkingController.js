@@ -82,3 +82,64 @@ export const getParkingById = async (req, res) => {
       .json({ message: "Error al obtener los datos del parqueadero" });
   }
 };
+
+
+export const updateParking = async (req, res) => {
+  const { parkingId } = req.params;
+
+  const {
+    name,
+    city,
+    address,
+    slots,
+    sedanHourlyRate,
+    suvHourlyRate,
+    motorcycleHourlyRate,
+    openingTime,
+    closingTime,
+    isCovered,
+  } = req.body;
+
+  const image = req.file;
+
+  try{
+    const parking = await Parking.findByPk(parkingId);
+    if (!parking){
+      return res.status(404).json({message: "parqueadero no encontrado"})
+    }
+    await parking.update({
+      name,
+      city,
+      address,
+      slots,
+      sedanHourlyRate,
+      suvHourlyRate,
+      motorcycleHourlyRate,
+      openingTime,
+      closingTime,
+      imgUrl: image ? image.filename : null,
+      isCovered,
+    })
+    res.status(201).json({parking})
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener los datos del parqueadero" });
+  }
+}
+
+export const deleteParking = async (req, res) => {
+  const { parkingId } = req.params;
+
+  try{
+    const parking = await Parking.findByPk(parkingId);
+    await parking.destroy()
+    res.status(200).json({message: "Parqueadero borrado exitosamente"})
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error en el servidor" });
+  }
+}

@@ -104,3 +104,40 @@ export const getTopParkingsByReservations = async (req, res) => {
       .json({ message: "Error al obtener el top de parqueaderos." });
   }
 };
+
+export const updateReservationStatus = async (req, res) => {
+  const { reservationId } = req.params;
+  const { status, startTime, endTime } = req.body;
+  try {
+    const reservation = await Reservations.findByPk(reservationId);
+    if (!reservation){
+      return res.status(404).json({message: "Reserva no encontrada"})
+    }
+    await reservation.update({
+      status: status,
+      startTime: startTime,
+      endTime: endTime
+    })
+    await reservation.save()
+    res.status(201).json({reservation: reservation})
+  } catch (error){
+    console.log(error);
+    res.status(500).json({message: "Error en el servidor"})
+  }
+}
+
+export const pendingReservationByUser = async (req, res) => {
+  const { identityCard }  = req.params;
+  try{
+    const reservations = await Reservations.findAll({
+      where: {
+        identityCard: identityCard,
+        status: 'Pending',
+      }
+    });
+    res.status(201).json({reservations})
+  } catch (error){
+    console.log(error);
+    res.status(500).json({message: "Error en el servidor"})
+  } 
+}

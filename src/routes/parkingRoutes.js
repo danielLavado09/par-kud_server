@@ -6,6 +6,8 @@ import {
   getCities,
   getParkingsByCity,
   getParkingById,
+  updateParking,
+  deleteParking
 } from "../controllers/parkingController.js";
 
 const router = Router();
@@ -26,5 +28,7 @@ router.post("/create-parking", upload.single("image"), createParking);
 router.get("/get-cities", getCities);
 router.get("/parkings", getParkingsByCity);
 router.get("/parking/:parkingId", getParkingById);
+router.post("/parking/update/:parkingId", updateParking)
+router.post("/parking/delete/:parkingId", deleteParking)
 
 export default router;
