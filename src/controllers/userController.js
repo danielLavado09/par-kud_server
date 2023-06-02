@@ -111,6 +111,11 @@ export const usersByReservations = async (req, res) => {
   try {
     const users = await User.findAll({
       attributes: ["userName", "bookings"],
+      where: {
+        bookings: {
+          [Op.not]: 0,
+        },
+      },
       order: [["bookings", "ASC"]],
       limit: limit,
     });
