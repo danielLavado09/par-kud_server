@@ -1,6 +1,7 @@
 import { Employee } from "../models/Employee.js";
 import SHA1 from "crypto-js/sha1.js";
 import { generateRandomPassword } from "../util.js";
+import { Parking } from "../models/Parking.js";
 
 export const employeeRegister = async (req, res) => {
   try {
@@ -125,3 +126,18 @@ export const employeeLogin = async (req, res) => {
     res.status(500).json({ message: "Error en el servidor" });
     }
 };
+
+export const getByParkingId = async (req, res) => {
+  const { parkingId } = req.params;
+  try{
+    const employees = await Employee.findAll({
+      where: {
+        parkingId: parkingId,
+      }
+    });
+    res.status(201).json({employees});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error en el servidor" });
+    }
+}
