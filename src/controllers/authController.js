@@ -90,3 +90,25 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Error en el servidor" });
   }
 };
+
+export const updatePassword = async (req, res) => {
+  const { identityCard } = req.params;
+  const { currentPassword, newPassword } = req.body;
+  try{
+    const user = User.findByPk(identityCard);
+    if (!user){
+      return res.status(404).json({message: "Usuario no encontrado"});
+    }
+    if (user.password!=SHA1(currentPassword).toString()){
+      return res.status(401).json({message: "Contraseña incorrecta"});
+    }
+    const hashedPassword = SHA1(newPassword);
+    await user.update({
+      password: hashedPassword,
+    });
+    res.status(201).json({user})
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error en el servidor" });
+  }
+}
