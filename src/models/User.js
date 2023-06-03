@@ -38,6 +38,11 @@ export const User = sequelize.define(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    passwordChanged: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
+    },
   },
   {
     timestamps: false,

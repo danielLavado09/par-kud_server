@@ -7,7 +7,7 @@ export const Reservations = sequelize.define(
   "Reservations",
   {
     reservationId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.TEXT,
       allowNull: false,
       unique: true,
       primaryKey: true,

@@ -3,6 +3,7 @@ import SHA1 from "crypto-js/sha1.js";
 import { generateRandomPassword } from "../util.js";
 import jwt from "jsonwebtoken";
 import { Op } from "sequelize";
+import sgMail from "@sendgrid/mail";
 
 // Registro de usuarios
 export const register = async (req, res) => {
@@ -36,8 +37,6 @@ export const register = async (req, res) => {
       password: hashedPassword,
     });
 
-    // Enviar la contraseña por correo.
-
     // Generar el token JWT
     const token = jwt.sign(
       { userId: user.identityCard },
@@ -46,6 +45,24 @@ export const register = async (req, res) => {
         expiresIn: "1h",
       }
     );
+
+    // Enviar la contraseña por correo electrónico
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+      to: user.email,
+      from: "parkud.udcode@outlook.com", // Reemplaza con tu dirección de correo electrónico
+      subject: "Contraseña de registro",
+      text: `Tu contraseña de registro es: ${password}`,
+    };
+
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log("Email sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
     // Enviar la respuesta con el token
     console.log(password);
@@ -94,21 +111,22 @@ export const login = async (req, res) => {
 export const updatePassword = async (req, res) => {
   const { identityCard } = req.params;
   const { currentPassword, newPassword } = req.body;
-  try{
-    const user = User.findByPk(identityCard);
-    if (!user){
-      return res.status(404).json({message: "Usuario no encontrado"});
+  try {
+    const user = await User.findByPk(identityCard);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
     }
-    if (user.password!=SHA1(currentPassword).toString()){
-      return res.status(401).json({message: "Contraseña incorrecta"});
+    if (user.password != SHA1(currentPassword).toString()) {
+      return res.status(401).json({ message: "Contraseña incorrecta" });
     }
-    const hashedPassword = SHA1(newPassword);
+    const hashedPassword = SHA1(newPassword).toString();
     await user.update({
       password: hashedPassword,
+      passwordChanged: true,
     });
-    res.status(201).json({user})
+    res.status(201).json(user);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error en el servidor" });
   }
-}
+};
