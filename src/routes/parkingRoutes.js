@@ -24,9 +24,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/create-parking", upload.single("image"), createParking);
-router.get("/get-cities", getCities);
-router.get("/parkings", getParkingsByCity);
+router.post("/parking/create", upload.single("image"), createParking);
+router.get("/parking/cities", getCities);
+router.get("/parking/parkings", getParkingsByCity);
 router.get("/parking/:parkingId", getParkingById);
 router.post(
   "/parking/update/:parkingId",
