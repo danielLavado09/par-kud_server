@@ -83,7 +83,6 @@ export const getParkingById = async (req, res) => {
   }
 };
 
-
 export const updateParking = async (req, res) => {
   const { parkingId } = req.params;
 
@@ -102,10 +101,10 @@ export const updateParking = async (req, res) => {
 
   const image = req.file;
 
-  try{
+  try {
     const parking = await Parking.findByPk(parkingId);
-    if (!parking){
-      return res.status(404).json({message: "parqueadero no encontrado"})
+    if (!parking) {
+      return res.status(404).json({ message: "Parqueadero no encontrado." });
     }
     await parking.update({
       name,
@@ -119,27 +118,25 @@ export const updateParking = async (req, res) => {
       closingTime,
       imgUrl: image ? image.filename : null,
       isCovered,
-    })
-    res.status(201).json({parking})
+    });
+    res.status(201).json({ parking });
   } catch (error) {
     console.error(error);
     res
       .status(500)
-      .json({ message: "Error al obtener los datos del parqueadero" });
+      .json({ message: "Error al obtener los datos del parqueadero." });
   }
-}
+};
 
 export const deleteParking = async (req, res) => {
   const { parkingId } = req.params;
 
-  try{
+  try {
     const parking = await Parking.findByPk(parkingId);
-    await parking.destroy()
-    res.status(200).json({message: "Parqueadero borrado exitosamente"})
+    await parking.destroy();
+    res.status(200).json({ message: "Parqueadero borrado exitosamente" });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Error en el servidor" });
+    res.status(500).json({ message: "Error en el servidor" });
   }
-}
+};
