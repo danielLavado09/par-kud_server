@@ -2,6 +2,7 @@ import { Employee } from "../models/Employee.js";
 import SHA1 from "crypto-js/sha1.js";
 import jwt from "jsonwebtoken";
 import { generateRandomPassword } from "../util.js";
+import sgMail from "@sendgrid/mail";
 
 export const employeeRegister = async (req, res) => {
   try {
@@ -28,6 +29,25 @@ export const employeeRegister = async (req, res) => {
       email,
       password: hashedPassword,
     });
+
+    // Enviar la contraseña por correo electrónico
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+      to: employee.email,
+      from: "parkud.udcode@outlook.com", // Reemplaza con tu dirección de correo electrónico
+      subject: "Contraseña empleado",
+      text: `Hola, tu contraseña para empleado es: ${password}`,
+    };
+
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log("Email sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     res
       .status(201)
       .json({ message: "Empleado creado correctamente", employee: employee });

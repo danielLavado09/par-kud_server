@@ -33,6 +33,6 @@ router.post(
   upload.single("image"),
   updateParking
 );
-router.post("/parking/delete/:parkingId", deleteParking);
+router.delete("/parking/delete/:parkingId", deleteParking);
 
 export default router;

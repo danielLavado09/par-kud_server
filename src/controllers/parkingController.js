@@ -1,4 +1,5 @@
 import { Parking } from "../models/Parking.js";
+import fs from "fs-extra";
 
 export const createParking = async (req, res) => {
   try {
@@ -133,6 +134,13 @@ export const deleteParking = async (req, res) => {
 
   try {
     const parking = await Parking.findByPk(parkingId);
+    const imageUrl = parking.imgUrl;
+
+    // Eliminar la imagen asociada si existe
+    if (imageUrl) {
+      await fs.unlink(`uploads/${imageUrl}`);
+    }
+
     await parking.destroy();
     res.status(200).json({ message: "Parqueadero borrado exitosamente" });
   } catch (error) {

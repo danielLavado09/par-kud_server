@@ -7,7 +7,7 @@ async function main() {
   try {
     await sequelize.authenticate();
     // Drop a la DB en cada start.
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true });
     console.log("Connected to the database.");
     app.listen(PORT, () => {
       console.log("Server running at 3000");

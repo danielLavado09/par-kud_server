@@ -11,11 +11,14 @@ export const createReservation = async (req, res) => {
     // Generar el reservationId utilizando identityCard, parkingId y la fecha y hora actual
     const reservationId = `${identityCard}${parkingId}${Date.now()}`;
 
+    const date = Date.now();
+
     // Crear la reserva en la base de datos
     const reservation = await Reservations.create({
       reservationId,
       identityCard,
       parkingId,
+      createdAt: date,
     });
 
     // Incrementar el atributo bookings del usuario en 1
@@ -138,7 +141,7 @@ export const pendingReservationByUser = async (req, res) => {
     const reservations = await Reservations.findAll({
       where: {
         identityCard: identityCard,
-        status: "Pending",
+        status: "Pendiente",
       },
     });
     res.status(201).json({ reservations });

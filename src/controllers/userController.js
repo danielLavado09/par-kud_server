@@ -4,6 +4,7 @@ import { Reservations } from "../models/Reservations.js";
 import SHA1 from "crypto-js/sha1.js";
 import { generateRandomPassword } from "../util.js";
 import { Op } from "sequelize";
+import sgMail from "@sendgrid/mail";
 
 export const updateUser = async (req, res) => {
   try {
@@ -96,7 +97,23 @@ export const createUser = async (req, res) => {
       password: hashedPassword,
     });
 
-    // Enviar la contraseña por correo.
+    // Enviar la contraseña por correo electrónico
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+      to: user.email,
+      from: "parkud.udcode@outlook.com", // Reemplaza con tu dirección de correo electrónico
+      subject: "Contraseña de registro",
+      text: `Tu contraseña de registro es: ${password}`,
+    };
+
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log("Email sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
     console.log(password);
     res.status(201).json({ user });
@@ -151,46 +168,47 @@ export const userByParkingId = async (req, res) => {
 };
 
 export const monthlyUserReservations = async (req, res) => {
-    try{
-        const currentYear = new Date().getFullYear();
-        const months = [
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
-            "Diciembre",
-        ];
-        const usersByMonth = []
-        for (const [i, month] of months.entries()){
-            const usersId = await Reservations.findAll({
-                where: {
-                    createdAt: {
-                        [Op.between]: [
-                          new Date(`${currentYear}-${i+1}-01`),
-                          new Date(`${currentYear}-${i+1}-31`),
-                        ],
-                      },
-                }, attributes: ['identityCard']
-            })
-            const users = await User.findAll({
-                where: {
-                  identityCard: usersId.map((user) => user.identityCard),
-                },
-                attributes: ["identityCard", "bookings"],
-                raw: true,
-            })
-            usersByMonth.push({month, users})
-        }
-        res.status(201).json({usersByMonth})
-    } catch (error){
-        console.log(error);
-        res.status(500).json({ message: "Error en el servidor" });
+  try {
+    const currentYear = new Date().getFullYear();
+    const months = [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
+    ];
+    const usersByMonth = [];
+    for (const [i, month] of months.entries()) {
+      const usersId = await Reservations.findAll({
+        where: {
+          createdAt: {
+            [Op.between]: [
+              new Date(`${currentYear}-${i + 1}-01`),
+              new Date(`${currentYear}-${i + 1}-31`),
+            ],
+          },
+        },
+        attributes: ["identityCard"],
+      });
+      const users = await User.findAll({
+        where: {
+          identityCard: usersId.map((user) => user.identityCard),
+        },
+        attributes: ["identityCard", "bookings"],
+        raw: true,
+      });
+      usersByMonth.push({ month, users });
     }
-}
+    res.status(201).json({ usersByMonth });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error en el servidor" });
+  }
+};

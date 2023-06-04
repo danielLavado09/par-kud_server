@@ -13,14 +13,13 @@ export const Reservations = sequelize.define(
       primaryKey: true,
     },
     status: {
-      type: DataTypes.ENUM("Pending", "Confirmed", "Cancelled"),
+      type: DataTypes.ENUM("Pendiente", "Confirmada", "Cancelada"),
       allowNull: false,
-      defaultValue: "Pending",
+      defaultValue: "Pendiente",
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW, // Establece el valor por defecto a la fecha y hora actual
     },
     startTime: {
       type: DataTypes.DATE,
